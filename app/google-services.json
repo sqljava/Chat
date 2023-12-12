@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "478424927569",
+    "project_id": "messenger-9e033",
+    "storage_bucket": "messenger-9e033.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478424927569:android:288260b939209b8ad39770",
+        "android_client_info": {
+          "package_name": "uz.ictschool.chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5T9dauNplpUnRxpy5hqW4KBfWBmcuavk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
