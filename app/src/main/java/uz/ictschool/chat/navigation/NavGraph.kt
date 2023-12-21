@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import uz.ictschool.chat.screens.HomeScreen
 import uz.ictschool.chat.screens.LoginScreen
 import uz.ictschool.chat.screens.SplashScreen
 
@@ -18,7 +19,10 @@ fun NavGraph(navController: NavHostController){
             SplashScreen(navController = navController)
         }
         composable(route = Screens.Login.route){
-            LoginScreen()
+            LoginScreen(navController)
+        }
+        composable(route = Screens.Home.route){
+            HomeScreen()
         }
 
     }
