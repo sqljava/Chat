@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +39,9 @@ import uz.ictschool.chat.helpers.FireBaseHelper
 import uz.ictschool.chat.helpers.SharedPrefHelper
 import uz.ictschool.chat.navigation.HOME_ROUTE
 import uz.ictschool.chat.navigation.NavGraph
+import uz.ictschool.chat.navigation.SIGNUP_ROUTE
+import uz.ictschool.chat.ui.theme.LoginButton
+import uz.ictschool.chat.ui.theme.SignupButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,36 +68,53 @@ fun LoginScreen(navController: NavHostController){
             Text(text = "Log in",
                 fontSize = 30.sp)
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(17.dp))
 
             OutlinedTextField(
                 value = userName,
-                label = { Text(text = "Name")},
+                label = { Text(text = "Username")},
+                singleLine = true,
+                shape = RoundedCornerShape(15.dp),
                 onValueChange = {
                     userName = it
 
             })
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(17.dp))
 
             OutlinedTextField(
                 value = password,
                 label = { Text(text = "Password")},
+                singleLine = true,
+                shape = RoundedCornerShape(15.dp),
                 onValueChange = {
                     password = it
             })
 
             Spacer(modifier = Modifier.height(30.dp))
-            
-            Button(
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta),
-                onClick = {
-                    loginBtn(userName, password, context, navController)
-                }) {
-                
-                Text(text = "Log in")
-                
+
+            Button(onClick = {
+                loginBtn(userName, password, context, navController)
+            },
+                modifier = Modifier.width(250.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = LoginButton)) {
+                Text(text = "Log In",
+                    fontSize = 17.sp,
+                    modifier = Modifier.padding(vertical = 10.dp))
             }
+
+            Spacer(modifier = Modifier.height(17.dp))
+
+            Button(onClick = {
+                  navController.navigate(SIGNUP_ROUTE)
+                             },
+                modifier = Modifier.width(250.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = SignupButton)) {
+                Text(text = "SignUp",
+                    fontSize = 17.sp,
+                    modifier = Modifier.padding(vertical = 10.dp))
+            }
+
         }
     }
 
@@ -114,12 +137,8 @@ fun loginBtn(userName:String,
             }
             Toast.makeText(context,
                 "You logged in", Toast.LENGTH_SHORT).show()
-
-
         }
     }
-
-
 }
 
 @Preview(showBackground = true)
