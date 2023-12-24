@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +41,6 @@ import uz.ictschool.chat.R
 import uz.ictschool.chat.helpers.FireBaseHelper
 import uz.ictschool.chat.helpers.SharedPrefHelper
 import uz.ictschool.chat.model.User
-import uz.ictschool.chat.navigation.CHAT_ROUTE
 import uz.ictschool.chat.navigation.Screens
 import uz.ictschool.chat.ui.theme.LoginButton
 

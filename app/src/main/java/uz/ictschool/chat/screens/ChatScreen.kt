@@ -1,5 +1,6 @@
 package uz.ictschool.chat.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,11 +16,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.rounded.Send
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,33 +45,47 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import uz.ictschool.chat.R
 import uz.ictschool.chat.helpers.FireBaseHelper
+import uz.ictschool.chat.helpers.SharedPrefHelper
+import uz.ictschool.chat.model.Message
 import uz.ictschool.chat.model.User
 import uz.ictschool.chat.ui.theme.LoginButton
+import uz.ictschool.chat.ui.theme.ToUserMessage
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(navController: NavController,
                key:String){
 
-    var user by remember{
+    val context = LocalContext.current
+    val fromKey = SharedPrefHelper.getInstance(context).getUserKey()
+
+    var toUser by remember{
         mutableStateOf(User())
     }
     var message by remember {
         mutableStateOf("")
     }
+    val m = mutableListOf<Message>()
 
-    var t by remember {
-        mutableStateOf("")
+    var messages by remember {
+        mutableStateOf(m)
     }
+
+
     FireBaseHelper.getUser(key){u->
-        user = u
+        toUser = u
+    }
+
+    FireBaseHelper.getMessagesInChat(toUser.key!!, context){
+        messages = it
     }
 
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
     ){
 
-        ChatTopBar(user = user,navController)
+        ChatTopBar(user = toUser,navController)
 
         Box(modifier = Modifier
             .fillMaxWidth()
@@ -76,7 +93,9 @@ fun ChatScreen(navController: NavController,
             contentAlignment = Alignment.BottomCenter){
 
             LazyColumn{
-
+                items(messages){message->
+                    MessageItem(message = message, fromKey = fromKey)
+                }
             }
         }
 
@@ -95,15 +114,11 @@ fun ChatScreen(navController: NavController,
                 modifier = Modifier
                     .size(20.dp)
                     .clickable {
-                        t = message
+                        FireBaseHelper.sendMessage(message, toUser.key!!, context)
                         message = ""
-
                     })
         }
-
     }
-
-
 }
 
 @Composable
@@ -145,6 +160,33 @@ fun ChatTopBar(user: User,
             }
         }
     }
+}
+
+@Composable
+fun MessageItem(message: Message, fromKey: String){
+    var tcolor = ToUserMessage
+    var tAlignment = Alignment.CenterStart
+    if (message.from == fromKey){
+        tcolor = LoginButton
+        tAlignment = Alignment.CenterEnd
+    }
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(3.dp),
+        contentAlignment = tAlignment){
+
+        Card(modifier = Modifier.background(tcolor)) {
+            Text(text = message.text!!,
+                fontSize = 15.sp)
+        }
+
+
+    }
+
+
+
+
 }
 
 @Preview(showBackground = true)

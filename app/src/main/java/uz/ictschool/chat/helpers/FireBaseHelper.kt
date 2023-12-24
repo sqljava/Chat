@@ -7,6 +7,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import uz.ictschool.chat.model.Message
 import uz.ictschool.chat.model.User
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -115,11 +116,45 @@ class FireBaseHelper {
         fun sendMessage(text:String, toKey:String, context: Context){
             val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
             val currentDate = sdf.format(Date())
-            val currentUserKey = SharedPrefHelper.getInstance(context).getUserKey()
+            val fromKey = SharedPrefHelper.getInstance(context).getUserKey()
 
+            val messageKey = messages.push().key.toString()
+            val message = Message(
+                text = text,
+                from = fromKey,
+                to = toKey,
+                date = currentDate,
+                key = messageKey)
+            messages.child(messageKey).setValue(message)
 
+            users.child(fromKey).child("chats").child(toKey)
+                .child(messageKey).setValue(message)
 
+            users.child(toKey).child("chats").child(fromKey)
+                .child(messageKey).setValue(message)
+        }
 
+        fun getMessagesInChat(toKey: String,
+                              context: Context,
+                              callback: (messages: MutableList<Message>) -> Unit){
+            val fromKey = SharedPrefHelper.getInstance(context).getUserKey()
+            users.child(fromKey).child("chats")
+                .child(toKey).addValueEventListener(object:ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val messages = snapshot.children
+                    val returnMessages = mutableListOf<Message>()
+                    for (m in messages){
+                        val message = m.getValue(Message::class.java)!!
+                        returnMessages.add(message)
+                    }
+                    callback(returnMessages)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("TAG", "onCancelled: $error")
+                }
+
+            })
 
         }
 
