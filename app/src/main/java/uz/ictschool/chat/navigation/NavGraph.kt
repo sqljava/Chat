@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import uz.ictschool.chat.screens.ChatScreen
 import uz.ictschool.chat.screens.HomeScreen
 import uz.ictschool.chat.screens.LoginScreen
+import uz.ictschool.chat.screens.NewChatsScreen
 import uz.ictschool.chat.screens.SettingsScreen
 import uz.ictschool.chat.screens.SignUpScreen
 import uz.ictschool.chat.screens.SplashScreen
@@ -42,6 +43,9 @@ fun NavGraph(navController: NavHostController){
         }
         composable(route = Screens.Settings.route){
             SettingsScreen(navController = navController)
+        }
+        composable(route = Screens.NewChats.route){
+            NewChatsScreen(navController)
         }
 
     }

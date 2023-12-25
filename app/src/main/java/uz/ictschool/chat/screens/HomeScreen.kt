@@ -20,8 +20,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -79,16 +81,26 @@ fun HomeScreen(navController: NavController){
             }
         }
 
-        Button(onClick = { /*TODO*/ },
-            modifier = Modifier.size(50.dp).align(Alignment.BottomEnd),
-            shape = RoundedCornerShape(50.dp)
-        ) {
+        Box(modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .padding(20.dp),
+            contentAlignment = Alignment.Center){
 
+            Button(onClick = {
+                navController.navigate(Screens.NewChats.route) },
+                modifier = Modifier
+                    .size(60.dp)
+                    .align(Alignment.BottomEnd),
+                colors = ButtonDefaults.buttonColors(containerColor = LoginButton),
+                shape = RoundedCornerShape(20.dp)
+            ) {
+            }
+            Icon(imageVector = Icons.Default.Add,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(30.dp))
         }
-
     }
-
-
 }
 
 @Composable
