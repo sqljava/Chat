@@ -14,6 +14,7 @@ sealed class Screens(val route: String) {
     object SignUp: Screens(SIGNUP_ROUTE)
     object Home: Screens(HOME_ROUTE)
     object Settings: Screens("settings")
+    object NewChats: Screens("newchats")
     object Chat: Screens("chat_route/{$CHAT_KEY}"){
         fun passKey(key: String):String{
             return "$CHAT_ROUTE/$key"

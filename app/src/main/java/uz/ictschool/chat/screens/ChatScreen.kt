@@ -186,15 +186,16 @@ fun MessageItem(message: Message, fromKey: String){
 
         Card(modifier = Modifier.background(tcolor)) {
             Text(text = message.text!!,
-                fontSize = 15.sp)
+                fontSize = 15.sp,
+                modifier = Modifier.background(tcolor).padding(3.dp))
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun chattest(){
-    //ChatScreen(navController = rememberNavController(), key = "-NmRS0ILKaUyRr1UNhrd")
-    ChatTopBar(User("sdkfjh","","sdfgsdfg","",null),
-        rememberNavController())
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun chattest(){
+//    ChatScreen(navController = rememberNavController(), key = "-NmRS0ILKaUyRr1UNhrd")
+//    //ChatTopBar(User("sdkfjh","","sdfgsdfg","",null),
+//        //rememberNavController())
+//}
