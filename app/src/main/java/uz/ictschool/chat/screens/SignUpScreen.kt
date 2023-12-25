@@ -96,7 +96,7 @@ fun SignUpScreen(navController: NavHostController){
         Spacer(modifier = Modifier.height(30.dp))
 
         Button(onClick = {
-            var user = User(userName, password,firstName,lastName)
+            var user = User(userName, password,firstName,lastName,null)
             FireBaseHelper.signUp(user, context){success->
                 if (success){
                     Toast.makeText(context,

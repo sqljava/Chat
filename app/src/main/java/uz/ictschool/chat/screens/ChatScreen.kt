@@ -76,10 +76,16 @@ fun ChatScreen(navController: NavController,
     FireBaseHelper.getUser(key){u->
         toUser = u
     }
+//
+//    FireBaseHelper.getMessagesInChat(toUser.key!!, context){rt->
+//        messages = rt
+//    }
 
-    FireBaseHelper.getMessagesInChat(toUser.key!!, context){
+
+    FireBaseHelper.getAllMessages {
         messages = it
     }
+
 
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
@@ -99,7 +105,8 @@ fun ChatScreen(navController: NavController,
             }
         }
 
-        Row (modifier = Modifier.fillMaxWidth()){
+        Row (modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically){
 
             TextField(value = message,
                 label = { Text(text = "Message")},
@@ -112,11 +119,12 @@ fun ChatScreen(navController: NavController,
             Icon(imageVector = Icons.Rounded.Send,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(20.dp)
+                    .size(50.dp)
                     .clickable {
                         FireBaseHelper.sendMessage(message, toUser.key!!, context)
                         message = ""
-                    })
+                    },
+                tint = LoginButton)
         }
     }
 }
@@ -180,19 +188,13 @@ fun MessageItem(message: Message, fromKey: String){
             Text(text = message.text!!,
                 fontSize = 15.sp)
         }
-
-
     }
-
-
-
-
 }
 
 @Preview(showBackground = true)
 @Composable
 fun chattest(){
     //ChatScreen(navController = rememberNavController(), key = "-NmRS0ILKaUyRr1UNhrd")
-    ChatTopBar(User("sdkfjh","","sdfgsdfg",""),
+    ChatTopBar(User("sdkfjh","","sdfgsdfg","",null),
         rememberNavController())
 }

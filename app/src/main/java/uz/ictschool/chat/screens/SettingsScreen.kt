@@ -48,7 +48,7 @@ fun SettingsScreen(navController: NavController){
     val key = SharedPrefHelper.getInstance(context).getUserKey()
 
     var user by remember {
-        mutableStateOf(User("","","",""))
+        mutableStateOf(User("","","","",""))
     }
     Log.d("TAG", "SettingsScreen: $user")
 

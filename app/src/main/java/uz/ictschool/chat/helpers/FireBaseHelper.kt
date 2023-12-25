@@ -51,24 +51,6 @@ class FireBaseHelper {
             success(true)
         }
 
-        fun getAllUsers(callback:(users: MutableList<User>)->Unit){
-
-            users.addValueEventListener(object: ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    var u = snapshot.children
-                    var users = mutableListOf<User>()
-                    u.forEach{
-                        val user = it.getValue(User::class.java)!!
-                        users.add(user)
-                    }
-                    callback(users)
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    Log.d("TAG", "onCancelled: $error",error.toException())
-                }
-            })
-        }
-
 
         fun getAllContacts(key: String,callback:(contacts: MutableList<User>)->Unit){
 
@@ -156,6 +138,25 @@ class FireBaseHelper {
 
             })
 
+        }
+
+        fun getAllMessages(callback: (messages: MutableList<Message>) -> Unit){
+            messages.addValueEventListener(object:ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val mes = snapshot.children
+                    var messages = mutableListOf<Message>()
+                    for (m in mes){
+                        val message = m.getValue(Message::class.java)!!
+                        messages.add(message)
+                    }
+                    callback(messages)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
         }
 
 

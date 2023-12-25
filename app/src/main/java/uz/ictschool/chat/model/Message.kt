@@ -1,10 +1,11 @@
 package uz.ictschool.chat.model
 
 data class Message(
-    var text: String? = null,
-    var from: String? = null,
-    var to: String? = null,
-    var date: String? = null,
-
-    var key: String? = null
-)
+    var text: String?,
+    var from: String?,
+    var to: String?,
+    var date: String?,
+    var key: String?
+){
+    constructor():this(null, null, null, null, null)
+}
