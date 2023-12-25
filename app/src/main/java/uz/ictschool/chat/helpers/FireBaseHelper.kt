@@ -117,9 +117,8 @@ class FireBaseHelper {
         }
 
         fun getMessagesInChat(toKey: String,
-                              context: Context,
+                              fromKey: String,
                               callback: (messages: MutableList<Message>) -> Unit){
-            val fromKey = SharedPrefHelper.getInstance(context).getUserKey()
             users.child(fromKey).child("chats")
                 .child(toKey).addValueEventListener(object:ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -140,30 +139,42 @@ class FireBaseHelper {
 
         }
 
-        fun getAllMessages(callback: (messages: MutableList<Message>) -> Unit){
+        fun getMessages(fromKey: String, toKey: String, callback: (messages: MutableList<Message>) -> Unit){
+            Log.d("Message", "onDataChange: fun ish")
+
             messages.addValueEventListener(object:ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val mes = snapshot.children
-                    var messages = mutableListOf<Message>()
-                    for (m in mes){
+                    val messages = mutableListOf<Message>()
+                    for (m in snapshot.children){
                         val message = m.getValue(Message::class.java)!!
-                        messages.add(message)
+                        if (message.from == fromKey && message.to == toKey){
+                            messages.add(message)
+                        Log.d("TAG", "onDataChange: $message")
+                        }
                     }
                     callback(messages)
                 }
-
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    Log.d("TAG", "onCancelled: $error")
                 }
 
             })
         }
 
 
-
-
-
-
+        fun checkUsername(userName: String):Boolean{
+            var users = mutableListOf<User>()
+            getAllContacts(""){
+                users = it
+            }
+            var exists = false
+            for (u in users){
+                if (userName == u.username){
+                    exists = true
+                }
+            }
+            return exists
+        }
     }
 
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +54,9 @@ fun SignUpScreen(navController: NavHostController){
     var lastName by remember {
         mutableStateOf("")
     }
+    var nullError by remember {
+        mutableStateOf(true)
+    }
     
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -62,6 +68,7 @@ fun SignUpScreen(navController: NavHostController){
             shape = RoundedCornerShape(15.dp),
             onValueChange = {
                 firstName = it
+                nullError = firstName == ""
             })
         Spacer(modifier = Modifier.height(18.dp))
         OutlinedTextField(
@@ -71,6 +78,7 @@ fun SignUpScreen(navController: NavHostController){
             shape = RoundedCornerShape(15.dp),
             onValueChange = {
                 lastName = it
+                nullError = lastName == ""
             })
 
         Spacer(modifier = Modifier.height(18.dp))
@@ -81,6 +89,7 @@ fun SignUpScreen(navController: NavHostController){
             shape = RoundedCornerShape(15.dp),
             onValueChange = {
                 userName = it
+                nullError = userName == ""
             })
 
         Spacer(modifier = Modifier.height(18.dp))
@@ -89,27 +98,41 @@ fun SignUpScreen(navController: NavHostController){
             label = { Text(text = "Password") },
             singleLine = true,
             shape = RoundedCornerShape(15.dp),
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             onValueChange = {
                 password = it
+                nullError = password == ""
             })
 
         Spacer(modifier = Modifier.height(30.dp))
 
         Button(onClick = {
-            var user = User(userName, password,firstName,lastName,null)
-            FireBaseHelper.signUp(user, context){success->
-                if (success){
-                    Toast.makeText(context,
-                        "Successfully signed up",
-                        Toast.LENGTH_SHORT).show()
-                    navController.navigate(Screens.Home.route) {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
+
+            if (nullError){
+                Toast.makeText(context, "Fill all fields", Toast.LENGTH_SHORT).show()
+            }else{
+                if (FireBaseHelper.checkUsername(userName)){
+                    Toast.makeText(context, "This username exists. Try other one", Toast.LENGTH_SHORT).show()
+                }else{
+                    if (password.length<7){
+                        Toast.makeText(context, "Password must be more than 8 characters", Toast.LENGTH_SHORT).show()
+                    }else{
+                        val user = User(userName, password,firstName,lastName,null)
+                        FireBaseHelper.signUp(user, context){success->
+                            if (success){
+                                Toast.makeText(context,
+                                    "Successfully signed up",
+                                    Toast.LENGTH_SHORT).show()
+                                navController.navigate(Screens.Home.route) {
+                                    popUpTo(navController.graph.id) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         }
                     }
-
                 }
-
             }
                          },
             modifier = Modifier.width(250.dp),

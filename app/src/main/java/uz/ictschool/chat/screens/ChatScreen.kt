@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,14 +35,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import uz.ictschool.chat.R
 import uz.ictschool.chat.helpers.FireBaseHelper
 import uz.ictschool.chat.helpers.SharedPrefHelper
@@ -76,16 +75,12 @@ fun ChatScreen(navController: NavController,
     FireBaseHelper.getUser(key){u->
         toUser = u
     }
-//
-//    FireBaseHelper.getMessagesInChat(toUser.key!!, context){rt->
-//        messages = rt
-//    }
 
-
-    FireBaseHelper.getAllMessages {
-        messages = it
+    toUser.key?.let {
+        FireBaseHelper.getMessagesInChat(it, fromKey){ rt->
+        messages = rt
     }
-
+    }
 
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
@@ -135,7 +130,7 @@ fun ChatTopBar(user: User,
     Row (modifier = Modifier
         .fillMaxWidth()
         .background(LoginButton)
-        .padding(vertical = 5.dp),
+        .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically){
         Icon(imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
@@ -150,7 +145,7 @@ fun ChatTopBar(user: User,
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
-                .size(60.dp))
+                .size(40.dp))
 
         Spacer(modifier = Modifier.width(30.dp))
 
@@ -184,10 +179,12 @@ fun MessageItem(message: Message, fromKey: String){
         .padding(3.dp),
         contentAlignment = tAlignment){
 
-        Card(modifier = Modifier.background(tcolor)) {
+        Card(modifier = Modifier, ) {
             Text(text = message.text!!,
-                fontSize = 15.sp,
-                modifier = Modifier.background(tcolor).padding(3.dp))
+                fontSize = 20.sp,
+                modifier = Modifier.padding(8.dp).drawBehind {
+                    drawCircle(color = tcolor, radius = this.size.maxDimension)
+                })
         }
     }
 }
